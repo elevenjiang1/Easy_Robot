@@ -50,13 +50,13 @@ def read_images():
         begin_time = time.time()
         ret, frame = camera.read()
 
-        # cv.imshow("image",frame)
+        cv.imshow("image",frame)
 
         print("camera hz is:{}".format(1/(time.time()-begin_time)))
 
-        # key_input=cv.waitKey(1)
-        # if key_input==ord('q'):
-        #     break
+        key_input=cv.waitKey(1)
+        if key_input==ord('q'):
+            break
 
 
 def basic_get_robot():
@@ -69,6 +69,23 @@ def basic_get_robot():
         print(robot_pose)
         time.sleep(1)
 
+def see_all():
+    # 2: init robot and camera
+    robot = UR_Robot(robot_ip="192.168.10.101")
+    camera = cv.VideoCapture(2)
+    while True:
+        begin_time = time.time()
+        ret, frame = camera.read()
+        robot_joints, robot_pose = robot.get_robot_state()
+        print(robot_joints)
+        print(robot_pose)
+
+        cv.imshow("Record_image", frame)
+        key_input =cv.waitKey(1)
+        if key_input == ord('q'):
+            break
+
+    robot.robot_state_thread.stop()
 
 def record_data():
     # 1: create save data
@@ -76,7 +93,7 @@ def record_data():
     save_path = os.path.join(Abs_Path, "data/{}".format(timestr))
     if os.path.exists(save_path):
         print("!!!!!!!!Error, exist save path!!!!!!!!!!!!!!")
-        # return
+        return
     else:
         os.mkdir(save_path)
 
@@ -90,11 +107,11 @@ def record_data():
         ret, frame = camera.read()
         robot_joints, robot_pose = robot.get_robot_state()
 
-        cv.imwrite(os.path.join(
-            save_path, "color_{}.png".format(save_number)), frame)
+        cv.imwrite(os.path.join(save_path, "color_{}.png".format(save_number)), frame)
+        save_number=save_number+1
         pose_save_list.append(robot_pose)
 
-        
+
         cv.imshow("Record_image", frame)
         key_input =cv.waitKey(1)
         if key_input == ord('q'):
@@ -107,10 +124,19 @@ def record_data():
     np.savez(os.path.join(save_path, "all_poses.npz"), all_poses=save_array)
 
     print("Finish save {} data".format(save_array.shape[0]))
-    robot.robot_state_thread.stop()
+    # robot.robot_state_thread.stop()
 
+
+
+def example_see_data():
+    dataset_path="/home/elevenjiang/Documents/Project/Easy_Robot/data/2023-02-14_15-17"
+    all_poses=np.load(os.path.join(dataset_path,"all_poses.npz"))['all_poses']
+    for pose in all_poses:
+        print(pose)
 
 if __name__ == "__main__":
     # read_images()
     # basic_get_robot()
-    record_data()
+    see_all()
+    # record_data()
+    # example_see_data()
