@@ -58,7 +58,6 @@ def read_images():
         if key_input==ord('q'):
             break
 
-
 def basic_get_robot():
     robot = UR_Robot(robot_ip="192.168.10.101")
 
@@ -125,8 +124,6 @@ def record_data():
 
     print("Finish save {} data".format(save_array.shape[0]))
     # robot.robot_state_thread.stop()
-
-
 
 def example_see_data():
     dataset_path="/home/elevenjiang/Documents/Project/Easy_Robot/data/2023-02-14_15-17"
