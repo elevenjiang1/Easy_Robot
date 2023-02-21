@@ -121,7 +121,7 @@ def train_vision_data():
     To test different serial generalization
     """
     #1: Init all data
-    dataset_path="/home/elevenjiang/Documents/Project/Easy_Robot/code/network/clean_data"
+    dataset_path="/home/elevenjiang/Documents/Project/Easy_Robot/code/network/big_dataset"
 
     NUM_batch_size=64
     NUM_workers=8
@@ -135,7 +135,7 @@ def train_vision_data():
     test_loader=DataLoader(test_dataset,batch_size=NUM_batch_size,shuffle=Flag_shuffle,num_workers=NUM_workers)
     
     
-    network=ImageCNN(output_delta=6).cuda()
+    network=ImageCNN(output_delta=7).cuda()
     optimizer=torch.optim.Adam(network.parameters(),lr=0.001)
 
     
